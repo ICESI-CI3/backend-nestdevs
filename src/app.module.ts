@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { AuthModule } from './auth/auth.module';
+import { UserModule } from './user/user.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
@@ -16,9 +17,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password: process.env.DATABASE_PASSWORD,
       database: process.env.DATABASE_NAME,
       autoLoadEntities: true,
-      synchronize: true,
+      synchronize: false,
     }),
-    AuthModule
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],

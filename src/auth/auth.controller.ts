@@ -4,31 +4,23 @@ import { AuthenticateDto } from "./dto/authenticate.dto";
 import { AuthGuard } from "@nestjs/passport";
 import { CreateUserDto } from "./dto/create.user.dto";
 import { create } from "domain";
+import { LocalAuthGuard } from "./guards/local-auth.guard";
 
 @Controller('auth')
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
-
-
-    /*
-    @Get('hello')
-    @UseGuards( AuthGuard() )
-    getHello(): string {
-        return 'Hello World!';
-    }
-    */
-
-
-
-
+    
     @Get('login')
-    login(@Body() authenticateDto: AuthenticateDto, @Res() res) {
-        return this.authService.login(authenticateDto);        
+    login(@Body() AuthenticateDto: AuthenticateDto){
+        return this.authService.login(AuthenticateDto);
     }
 
-    @Post('register')
-    register(@Body() createUserDto: CreateUserDto, @Res() res) {
-        return this.authService.register(createUserDto);
+    @Get('private')
+    @UseGuards(AuthGuard('jwt'))
+    privateRoute(@Res() res){
+        return res.status(HttpStatus.OK).json('You are authorized');
     }
+    
+
 
 }
