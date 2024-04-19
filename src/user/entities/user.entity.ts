@@ -16,7 +16,6 @@ export class User {
     password: string;
     @Column('text',{array: true })
     roles: UserRole[];
-
     @Column('timestamp',
             {nullable: false, default: () => 'CURRENT_TIMESTAMP'})
     createdAt: number;
