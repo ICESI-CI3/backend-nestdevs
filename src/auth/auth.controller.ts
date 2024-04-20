@@ -1,10 +1,11 @@
 import { Body, Controller, Get, HttpStatus, Post, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthenticateDto } from "./dto/authenticate.dto";
-import { AuthGuard } from "@nestjs/passport";
-import { CreateUserDto } from "./dto/create.user.dto";
-import { create } from "domain";
-import { LocalAuthGuard } from "./guards/local-auth.guard";
+import { JwtAuthGuard } from "./guards/jwt-auth.guard";
+import { RoleGuard } from "./guards/role-auth.guard";
+import { Roles } from "./decorators/role-auth.decorator";
+import { UserRole } from "src/user/entities/user.entity";
+
 
 @Controller('auth')
 export class AuthController {
@@ -15,12 +16,22 @@ export class AuthController {
         return this.authService.login(AuthenticateDto);
     }
 
-    @Get('private')
-    @UseGuards(AuthGuard('jwt'))
-    privateRoute(@Res() res){
-        return res.status(HttpStatus.OK).json('You are authorized');
+
+    @Roles(UserRole.ADMIN)
+    @Get('admin')
+    @UseGuards(JwtAuthGuard,RoleGuard)
+    privateRouteAdmin(@Res() res){
+        return res.status(HttpStatus.OK).json('You are authorized admin');
+    }
+
+    @Roles(UserRole.SELLER)
+    @Get('seller')
+    @UseGuards(JwtAuthGuard,RoleGuard)
+    privateRouteSellern(@Res() res){
+        return res.status(HttpStatus.OK).json('You are authorized seller');
     }
     
 
+    
 
 }

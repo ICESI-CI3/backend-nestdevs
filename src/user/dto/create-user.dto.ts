@@ -1,4 +1,5 @@
 import { IsOptional, IsString, Length } from "@nestjs/class-validator";
+import { UserRole } from "../entities/user.entity";
 
 export class CreateUserDto {
     @IsString()
@@ -6,6 +7,7 @@ export class CreateUserDto {
     @IsString()
     readonly password: string;
     @IsString()
+    readonly roles: UserRole[];
     readonly role: string;
     @IsString()
     @IsOptional()
