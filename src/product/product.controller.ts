@@ -1,5 +1,4 @@
 import { Controller, Get, HttpCode, Post, Param, Body, Put, Delete, ParseUUIDPipe } from '@nestjs/common';
-
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './product.service';
@@ -18,7 +17,7 @@ export class ProductController {
     }
 
     @Get(':id')
-    findOneById(@Param('id', ParseUUIDPipe) id: string): Product {
+    findOne(@Param('id', ParseUUIDPipe) id: string): Product {
         return this.productService.findOneById(id);
     }
 
