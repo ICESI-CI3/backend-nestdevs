@@ -6,26 +6,8 @@ import { UpdateProductDto } from './dto/update-product.dto';
 
 @Injectable()
 export class ProductsService {
-    private products: Product[] = [
-        {
-            id: uuid(),
-            name: 'Barra de chocolate artesanal',
-            description: 'Una deliciosa barra de chocolate artesanal elaborada con cacao de alta calidad y trozos de almendra tostada.',
-            price: 5000
-        },
-        {
-            id: uuid(),
-            name: 'Gomitas de ositos surtidos',
-            description: 'Una bolsa de gomitas de ositos surtidos en sabores de fresa, limón, naranja y cereza, perfectos para disfrutar como un dulce tentempié.',
-            price: 500
-        },
-        {
-            id: uuid(),
-            name: 'Pastel de zanahoria',
-            description: 'Un delicioso pastel de zanahoria con una suave crema de queso en la parte superior, ideal para satisfacer tus antojos de dulce con un toque de sabor a especias.',
-            price: 8000
-        }
-    ];
+    private products: Product[] = [];
+
     findAll(): Product[] {
         return this.products;
     }
