@@ -3,6 +3,10 @@
 /node_modules
 /build
 
+# Docker compose file
+/pgadmin-data
+/postgres-data
+
 # Logs
 logs
 *.log
