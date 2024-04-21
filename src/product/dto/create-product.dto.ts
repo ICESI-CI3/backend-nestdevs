@@ -1,5 +1,7 @@
 
-import { IsNotEmpty, IsNumber, IsString } from "@nestjs/class-validator";
+import { IsArray, IsNotEmpty, IsNumber, IsString, ValidateNested, isString } from "@nestjs/class-validator";
+import { CreateUserDto } from "src/auth/dto/create.user.dto";
+import { User } from "src/user/entities/user.entity";
 
 export class CreateProductDto {
   @IsNotEmpty()
@@ -14,5 +16,7 @@ export class CreateProductDto {
   @IsNumber()
   readonly price: number;
 
-  
+  @IsString()
+  readonly sellerId : string;
+
 }

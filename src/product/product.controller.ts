@@ -12,7 +12,7 @@ export class ProductController {
     ){}
 
     @Get()
-    findAll(): Product[] {
+    findAll() {
         return this.productService.findAll();
     }
 
@@ -23,17 +23,17 @@ export class ProductController {
 
     @Post()
     @HttpCode(201)
-    create(@Body() createProductDto: CreateProductDto): Product {
+    create(@Body() createProductDto: CreateProductDto) {
         return this.productService.create(createProductDto);
     }
 
     @Put(':id')
-    update(@Param('id', ParseUUIDPipe) id: string, @Body() updateProductDto: UpdateProductDto): Product {
+    update(@Param('id', ParseUUIDPipe) id: string, @Body() updateProductDto: UpdateProductDto) {
         return this.productService.update(id, updateProductDto);
     }
 
     @Delete(':id')
-    delete(@Param('id', ParseUUIDPipe) id: string): Product {
+    delete(@Param('id', ParseUUIDPipe) id: string) {
         return this.productService.delete(id);
     }
 }
