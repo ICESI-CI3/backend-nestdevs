@@ -1,4 +1,6 @@
-import { BeforeInsert, Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Order } from "src/order/entities/order.entity";
+import { Product } from "src/product/model/product";
+import { Column, Entity, JoinTable, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export enum UserRole {
     ADMIN = 'admin',
@@ -19,4 +21,9 @@ export class User {
     @Column('timestamp',
             {nullable: false, default: () => 'CURRENT_TIMESTAMP'})
     createdAt: number;
+    @OneToMany(() => Product, product => product.user, {cascade:true})
+    products: Product[];
+    @OneToMany(() => Order, order => order.user, {cascade:true})
+    orders: Order[];
 }
+

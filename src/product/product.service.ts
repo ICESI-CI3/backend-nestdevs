@@ -1,18 +1,28 @@
-import { Injectable, NotFoundException, InternalServerErrorException } from '@nestjs/common';
-import {v4 as uuid} from  'uuid';
+import { Injectable, NotFoundException, InternalServerErrorException, BadRequestException, Logger } from '@nestjs/common';
 import { Product } from "./model/product";
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ProductsService {
     private products: Product[] = [];
-
-    findAll(): Product[] {
-        return this.products;
+    private readonly logger = new Logger('ProductsService');
+    constructor(
+        @InjectRepository(Product)
+        private readonly productsRepository: Repository<Product>,
+    ){}
+    
+    async findAll() {
+        return await this.productsRepository.find({
+            relations : {
+                user: true,
+            }
+        })
     }
 
-    findOneById(id: string): Product {
+    findOneById(id: string) {
         const product = this.products.find(product => product.id === id);
         if (!product) {
             throw new NotFoundException(`Product with id ${id} not found`);
@@ -20,31 +30,45 @@ export class ProductsService {
         return product;
     }
 
-    create(createProductDto: CreateProductDto): Product {
-        const product: Product = {
-            id: uuid(),
-            ...createProductDto
-        };
-        this.products.push(product);
-        return product;
+    async create(createProductDto: CreateProductDto) {
+        const product = this.productsRepository.create(createProductDto);
+        return await this.productsRepository.save(product);
     }
 
-    update(id: string, updateProductDto: UpdateProductDto): Product {
-        let product = this.findOneById(id);
-        if (updateProductDto.id && updateProductDto.id !== id) {
-            throw new NotFoundException(`Invalid product id: ${updateProductDto.id}`);
-        }
-        product = {
-            ...product,
+    async update(id: string, updateProductDto: UpdateProductDto) {
+        const product = await this.productsRepository.preload({
+            id: id,
             ...updateProductDto
-        };
-        this.products = this.products.map(p => p.id === id ? product : p);
-        return product;
-    }
+        });
+      
+        if ( !product ) throw new NotFoundException(`Product with id: ${ id } not found`);
+    
+        try {
+            await this.productsRepository.save( product );
+            return product;
+        
+        } catch (error) {
+            this.handleDBExceptions(error);
+        }
+        return `This action updates a #${id} product`;
 
-    delete(id: string): Product {
-        const product = this.findOneById(id);
-        this.products = this.products.filter(p => p.id !== product.id);
-        return product;
+    }
+    private handleDBExceptions( error: any ) {
+
+        if ( error.code === '23505' )
+          throw new BadRequestException(error.detail);
+        
+        this.logger.error(error)
+        // console.log(error)
+        throw new InternalServerErrorException('Unexpected error, check server logs');
+    
+      }
+
+    async delete(id: string) {
+        const user = await this.findOne(id)
+        return await this.productsRepository.remove(user);
+    }
+    findOne(id: string) {
+        return this.productsRepository.findOneBy({id:id});
     }
 }

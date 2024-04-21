@@ -5,12 +5,15 @@ import { ProductController } from "./product.controller";
 import { ProductsService } from './product.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './model/product';
+import { ConfigModule } from "@nestjs/config";
 
 @Module({
   controllers: [ProductController],
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([Product]),
   ],
-  providers: [ProductsService],
+  providers:[ProductsService],
+  exports: [ProductsService],
 })
 export class ProductModule {}
