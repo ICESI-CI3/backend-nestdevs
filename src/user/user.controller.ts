@@ -38,7 +38,7 @@ export class UserController {
   @Roles(UserRole.ADMIN)
   @Patch(':id')
   update(@Req() req:any,@Param('id', ParseUUIDPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+    return this.userService.update(req,id, updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
