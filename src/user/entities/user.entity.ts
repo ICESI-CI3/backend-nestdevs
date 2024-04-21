@@ -23,6 +23,7 @@ export class User {
     createdAt: number;
     @OneToMany(() => Product, product => product.user, {cascade:true})
     products: Product[];
+    
     @OneToMany(() => Order, order => order.user, {cascade:true})
     orders: Order[];
 }
