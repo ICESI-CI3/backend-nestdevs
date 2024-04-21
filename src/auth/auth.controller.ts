@@ -16,7 +16,6 @@ export class AuthController {
         return this.authService.login(AuthenticateDto);
     }
 
-
     @Roles(UserRole.ADMIN)
     @Get('admin')
     @UseGuards(JwtAuthGuard,RoleGuard)
