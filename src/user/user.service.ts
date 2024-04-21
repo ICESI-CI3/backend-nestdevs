@@ -1,8 +1,8 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import {v4 as uuid} from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -45,6 +45,7 @@ export class UserService {
       skip: offset,
       relations:{
         products : true,
+        orders: true,
       }
     })
   }
@@ -53,22 +54,28 @@ export class UserService {
     return this.userRepository.findOneBy({ id: id });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepository.preload({
-      id: id,
-      ...updateUserDto
-    });
+  async update(req:any, id: string, updateUserDto: UpdateUserDto) {
+    const requser = req.user as User;
+    const user: User = await this.userRepository.findOneBy({id:id})
+    if (requser.id==user.id||user.roles.includes(UserRole.ADMIN)){
+      const user = await this.userRepository.preload({
+        id: id,
+        ...updateUserDto
+      });
 
-    if ( !user ) throw new NotFoundException(`User with id: ${ id } not found`);
+      if ( !user ) throw new NotFoundException(`User with id: ${ id } not found`);
 
-    try {
-      await this.userRepository.save( user );
-      return user;
-      
-    } catch (error) {
-      this.handleDBExceptions(error);
+      try {
+        await this.userRepository.save( user );
+        return user;
+        
+      } catch (error) {
+        this.handleDBExceptions(error);
+      }
+      return `This action updates a #${id} user`;
+    }else{
+      throw new UnauthorizedException;
     }
-    return `This action updates a #${id} user`;
   }
   private handleDBExceptions( error: any ) {
 
@@ -81,9 +88,15 @@ export class UserService {
 
   }
 
-  async remove(id: string) {
-    const user = await this.findOne(id)
-    await this.userRepository.remove(user);
+  async remove(req:any, id: string) {
+    const requser = req.user as User;
+    const user: User = await this.userRepository.findOneBy({id:id})
+    if (requser.id==user.id||user.roles.includes(UserRole.ADMIN)){
+      const user = await this.findOne(id)
+      await this.userRepository.remove(user);
+    }else{
+      throw new UnauthorizedException;
+    }
   }
 
   private handleDBErrors( error: any ): never {
