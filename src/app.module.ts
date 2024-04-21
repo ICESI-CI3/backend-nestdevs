@@ -8,7 +8,6 @@ import { ProductModule } from './product/product.module';
 import { UserModule } from './user/user.module';
 import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
