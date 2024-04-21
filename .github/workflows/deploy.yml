@@ -1,0 +1,38 @@
+name : Nest JS App CI/CD
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 
+        uses: actions/checkout@v4 # Checkout the code in the repository
+
+      - name: Use Node.js 20.x
+        uses: actions/setup-node@v2 # Set up the Node.js environment
+        with:
+          node-version: 20.x
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npx jest
+  deploy:
+    name: Deploy
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout 
+        uses: johnbeynon/render-deploy-action@v0.0.8
+        with:
+            service-id: https://api.render.com/deploy/srv-coi7k88l5elc73d2qesg?key=xsbjAtO5H6Q
+            api-key: rnd_Z4RNAUDrjgSYTP7pVCa00onGTNXT
+            wait-for-success: true
+
+
+            
+    
