@@ -12,8 +12,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
 
-  @UseGuards(JwtAuthGuard)
-  @Roles(UserRole.ADMIN)
+  //@UseGuards(JwtAuthGuard)
+  //@Roles(UserRole.ADMIN)
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);

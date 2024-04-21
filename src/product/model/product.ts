@@ -25,5 +25,8 @@ export class Product {
 
     @OneToMany(() => OrderItem, (orderItem) => orderItem.product, {cascade:true})
     orderItem: OrderItem[];
+
+
+    
 }
 
