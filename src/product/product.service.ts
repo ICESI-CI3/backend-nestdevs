@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException, InternalServerErrorException, BadRequestException, Logger } from '@nestjs/common';
+import { Injectable, NotFoundException, InternalServerErrorException, BadRequestException, Logger, UnauthorizedException } from '@nestjs/common';
 import { Product } from "./model/product";
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { User, UserRole } from 'src/user/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
@@ -35,23 +36,28 @@ export class ProductsService {
         return await this.productsRepository.save(product);
     }
 
-    async update(id: string, updateProductDto: UpdateProductDto) {
-        const product = await this.productsRepository.preload({
-            id: id,
-            ...updateProductDto
-        });
-      
-        if ( !product ) throw new NotFoundException(`Product with id: ${ id } not found`);
-    
-        try {
-            await this.productsRepository.save( product );
-            return product;
+    async update(req:any, id: string, updateProductDto: UpdateProductDto) {
+        const user = req.user as User;
+        const product: Product = await this.productsRepository.findOneBy({id:id})
+        if (product.sellerId==user.id||user.roles.includes(UserRole.ADMIN)){
+            const product = await this.productsRepository.preload({
+                id: id,
+                ...updateProductDto
+            });
         
-        } catch (error) {
-            this.handleDBExceptions(error);
+            if ( !product ) throw new NotFoundException(`Product with id: ${ id } not found`);
+        
+            try {
+                await this.productsRepository.save( product );
+                return product;
+            
+            } catch (error) {
+                this.handleDBExceptions(error);
+            }
+            return `This action updates a #${id} product`;
+        }else{
+            throw new UnauthorizedException;
         }
-        return `This action updates a #${id} product`;
-
     }
     private handleDBExceptions( error: any ) {
 
@@ -64,9 +70,15 @@ export class ProductsService {
     
       }
 
-    async delete(id: string) {
-        const user = await this.findOne(id)
-        return await this.productsRepository.remove(user);
+    async delete(req: any, id: string) {
+        const user = req.user as User;
+        const product: Product = await this.productsRepository.findOneBy({id:id})
+        if (product.sellerId==user.id||user.roles.includes(UserRole.ADMIN)){
+            const user = await this.findOne(id)
+            return await this.productsRepository.remove(user);
+        }else{
+            throw new UnauthorizedException;
+        }
     }
     findOne(id: string) {
         return this.productsRepository.findOneBy({id:id});
