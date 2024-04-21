@@ -2,7 +2,7 @@ name : Nest JS App CI/CD
 
 on:
   push:
-    branches: [ prod ]
+    branches: [ main ]
 
 jobs:
   test:
