@@ -21,5 +21,16 @@ jobs:
 
       - name: Run tests
         run: npx jest
+  deploy:
+    name: Deploy
+    needs: [test]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Render Deploy Action
+          uses: johnbeynon/render-deploy-action@v0.0.8
+          with: 
+            service-id: https://api.render.com/deploy/srv-coi7k88l5elc73d2qesg?key=xsbjAtO5H6Q
+            api-key: rnd_Z4RNAUDrjgSYTP7pVCa00onGTNXT
 
+            
     
