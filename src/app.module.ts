@@ -25,6 +25,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
     AuthModule,
     UserModule,
     ProductModule,
+    
   ],
   controllers: [AppController, ProductController],
   providers: [AppService, ProductsService],
