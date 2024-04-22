@@ -1,4 +1,4 @@
-import { IsOptional, IsString, IsUUID } from "@nestjs/class-validator";
+import { IsOptional, IsString, IsUUID, IsNumber } from "@nestjs/class-validator";
 
 export class UpdateProductDto {
     
@@ -14,7 +14,11 @@ export class UpdateProductDto {
     @IsOptional()
     readonly description?: string;
 
-    @IsString()
+    @IsNumber()
     @IsOptional()
     readonly price?: number;
+
+    @IsUUID()
+    @IsOptional()
+    readonly sellerId?: string;
 }
