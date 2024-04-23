@@ -3,9 +3,9 @@ import { OrderService } from './order.service';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UpdateOrderItemDto } from './dto/update-order.dto';
 import { CreateOrderItemDto } from './dto/create-orderItem.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Roles } from 'src/auth/decorators/role-auth.decorator';
-import { UserRole } from 'src/user/entities/user.entity';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from '../auth/decorators/role-auth.decorator';
+import { UserRole } from '../user/entities/user.entity';
 
 @Controller('order')
 export class OrderController {

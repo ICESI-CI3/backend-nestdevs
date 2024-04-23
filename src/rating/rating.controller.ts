@@ -2,8 +2,8 @@ import { Body, Controller, Get, Param, Post, Query, Req, UnauthorizedException, 
 import { RatingService } from "./rating.service";
 import { RateSellerDto } from "./dto/rate.seller.dto";
 import * as jwt from 'jsonwebtoken';
-import { JwtAuthGuard } from "src/auth/guards/jwt-auth.guard";
-import { PaginationDto } from "src/common/dtos/pagination.dto";
+import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
+import { PaginationDto } from "../common/dtos/pagination.dto";
 
 @Controller('rating')
 export class RatingController{
@@ -28,14 +28,17 @@ export class RatingController{
     }
 
 
-    private getUserIdFromRequest(@Req() request:Request){
-        const authHeader  = request.headers['authorization']
+    private getUserIdFromRequest(@Req() request: Request): string {
+        const authHeader = request.headers['authorization'];
+        if (!authHeader) {
+            throw new UnauthorizedException('Authorization header is missing');
+        }
         const token = authHeader.split(' ')[1];
-        try{
-            const decoded = jwt.verify(token,process.env.JWT_SECRET)
-            return decoded['id']
-        }catch(error){
-            throw new UnauthorizedException()
+        try {
+            const decoded = jwt.verify(token, process.env.JWT_SECRET);
+            return decoded['id'];
+        } catch (error) {
+            throw new UnauthorizedException();
         }
     }
 

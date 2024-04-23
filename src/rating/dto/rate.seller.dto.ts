@@ -9,6 +9,6 @@ export class RateSellerDto{
     readonly description : string;
 
     @IsNumber()
-    readonly starts : number;
+    readonly stars : number;
     
 }
