@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException } from '@nestjs/common';
+import { BadRequestException, Injectable, InternalServerErrorException, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
@@ -14,6 +14,7 @@ export class UserService {
 
   private users : User[] =[];
   private readonly logger = new Logger('UserService');
+  
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -38,7 +39,7 @@ export class UserService {
     }
   }
 
-  async registerSeller(createUserDto: CreateCurrentUserDto) {
+async registerSeller(createUserDto: CreateCurrentUserDto) {
     try{
       const {password,...userData} = createUserDto;
       const user = this.userRepository.create({
@@ -57,9 +58,9 @@ export class UserService {
     }catch(error){
       this.handleDBErrors(error);
     }
-  }
+}
 
-  async registerBuyer(createUserDto: CreateCurrentUserDto) {
+async registerBuyer(createUserDto: CreateCurrentUserDto) {
     try{
       const {password,...userData} = createUserDto;
       const user = this.userRepository.create({
@@ -80,66 +81,87 @@ export class UserService {
     }
   }
 
-  findAll( paginationDto: PaginationDto ) {
+
+  async findAll( paginationDto: PaginationDto ) {
 
     const { limit = 10, offset = 0 } = paginationDto;
 
-    return this.userRepository.find({
+    return await this.userRepository.find({
       take: limit,
       skip: offset,
       relations:{
         products : true,
+        orders: true,
       }
     })
+  }
+
+  async findAllSeller(){
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .where(':role = ANY(user.roles)', { role: UserRole['SELLER'] })
+      .getMany();
   }
 
   findOne(id: string) {
     return this.userRepository.findOneBy({ id: id });
   }
 
-  async update(id: string, updateUserDto: UpdateUserDto) {
-    const user = await this.userRepository.preload({
-      id: id,
-      ...updateUserDto
-    });
+  async update(req:any, id: string, updateUserDto: UpdateUserDto) {
+    const requser = req.user as User;
+    const user: User = await this.userRepository.findOneBy({id:id})
+    if (requser.id==user.id||user.roles.includes(UserRole.ADMIN)){
+      const user = await this.userRepository.preload({
+        id: id,
+        ...updateUserDto
+      });
 
-    if ( !user ) throw new NotFoundException(`User with id: ${ id } not found`);
+      if ( !user ) throw new NotFoundException(`User with id: ${ id } not found`);
 
-    try {
-      await this.userRepository.save( user );
-      return user;
-      
-    } catch (error) {
-      this.handleDBExceptions(error);
+      try {
+        await this.userRepository.save( user );
+        return user;
+        
+      } catch (error) {
+        this.handleDBErrors(error);
+      }
+      return `This action updates a #${id} user`;
+    }else{
+      throw new UnauthorizedException;
     }
-    return `This action updates a #${id} user`;
-  }
-  private handleDBExceptions( error: any ) {
-
-    if ( error.code === '23505' )
-      throw new BadRequestException(error.detail);
-    
-    this.logger.error(error)
-    // console.log(error)
-    throw new InternalServerErrorException('Unexpected error, check server logs');
-
   }
 
-  async remove(id: string) {
-    const user = await this.findOne(id)
-    await this.userRepository.remove(user);
+  fillUsersWithSeedData(users: CreateUserDto[]) {
+    for (const user of users) {
+      this.create(user);
+    }
   }
 
-  private handleDBErrors( error: any ): never {
 
+  async remove(req:any, id: string) {
+    const requser = req.user as User;
+    const user: User = await this.userRepository.findOneBy({id:id})
+    if (requser.id==user.id||user.roles.includes(UserRole.ADMIN)){
+      const user = await this.findOne(id)
+      await this.userRepository.remove(user);
+    }else{
+      throw new UnauthorizedException;
+    }
+  }
 
-    if ( error.code === '23505' ) 
-      throw new BadRequestException( error.detail );
-
-    console.log(error)
-
-    throw new InternalServerErrorException('Please check server logs');
-
+  private handleDBErrors(error: any): any {
+    if (process.env.NODE_ENV !== 'test') {
+      if (error.code === '23505') {
+        throw new BadRequestException(error.detail);
+      }
+  
+      console.error(error);
+      throw new InternalServerErrorException('Please check server logs');
+    } else {
+      
+      console.error('Database error:', error);
+      return error;
+    }
   }
 
 }

@@ -1,9 +1,11 @@
+import * as Faker from 'faker';
 import { Test, TestingModule } from '@nestjs/testing';
 import { ProductController } from './product.controller';
 import { ProductsService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from './model/product';
+import { Product } from './model/product.entity';
+import { User } from '../user/entities/user.entity';
 
 describe('ProductController', () => {
   let controller: ProductController;
@@ -34,53 +36,123 @@ describe('ProductController', () => {
     expect(controller).toBeDefined();
   });
 
-  describe('findAll', () => {
-    it('should return an array of products', () => {
-      const candyProducts: Product[] = [
-        { id: '1', name: 'Chocolate', description: 'Delicious chocolate bar', price: 2 },
-        { id: '2', name: 'Gummy Bears', description: 'Sweet and chewy gummy bears', price: 1 },
-      ];
-      jest.spyOn(productService, 'findAll').mockReturnValue(candyProducts);
+  describe('create', () => {
+    it('should create a product', async () => {
+      const fakeProduct: CreateProductDto = {
+        name: Faker.commerce.productName(),
+        category: Faker.commerce.department(),
+        description: Faker.lorem.paragraph(),
+        price: parseFloat(Faker.commerce.price()),
+        sellerId: Faker.datatype.uuid(),
+      };
 
-      expect(controller.findAll()).toEqual(candyProducts);
+      const createdProduct: Product = {
+        id: Faker.datatype.uuid(),
+        ...fakeProduct,
+        user: new User(),
+        orderItem: []
+      };
+
+      jest.spyOn(productService, 'create').mockResolvedValue(createdProduct);
+
+      expect(await controller.create(fakeProduct)).toBe(createdProduct);
+    });
+  });
+
+  describe('findAll', () => {
+    it('should return an array of products', async () => {
+      const products: Product[] = [
+        {
+          id: Faker.datatype.uuid(),
+          name: Faker.commerce.productName(),
+          category: Faker.commerce.department(),
+          description: Faker.lorem.paragraph(),
+          price: parseFloat(Faker.commerce.price()),
+          sellerId: Faker.datatype.uuid(),
+          user: new User(),
+          orderItem: []
+        },
+        {
+          id: Faker.datatype.uuid(),
+          name: Faker.commerce.productName(),
+          category: Faker.commerce.department(),
+          description: Faker.lorem.paragraph(),
+          price: parseFloat(Faker.commerce.price()),
+          sellerId: Faker.datatype.uuid(),
+          user: new User(),
+          orderItem: []
+        }
+      ];
+      jest.spyOn(productService, 'findAll').mockResolvedValue(products);
+
+      expect(await controller.findAll()).toBe(products);
     });
   });
 
   describe('findOne', () => {
-    it('should return a product by ID', () => {
-      const chocolate: Product = { id: '1', name: 'Chocolate', description: 'Delicious chocolate bar', price: 2 };
-      jest.spyOn(productService, 'findOneById').mockReturnValue(chocolate);
+    it('should return a product by ID', async () => {
+      const productId = Faker.datatype.uuid();
+      const product: Product = {
+        id: productId,
+        name: Faker.commerce.productName(),
+        category: Faker.commerce.department(),
+        description: Faker.lorem.paragraph(),
+        price: parseFloat(Faker.commerce.price()),
+        sellerId: Faker.datatype.uuid(),
+        user: new User(),
+        orderItem: []
+      };
+      jest.spyOn(productService, 'findOneById').mockReturnValue(product);
 
-      expect(controller.findOne('1')).toEqual(chocolate);
-    });
-  });
-
-  describe('create', () => {
-    it('should create a new product', () => {
-      const newCandy: CreateProductDto = { name: 'Jelly Beans', description: 'Assorted flavored jelly beans', price: 3 };
-      const createdCandy: Product = { id: '1', ...newCandy };
-      jest.spyOn(productService, 'create').mockReturnValue(createdCandy);
-
-      expect(controller.create(newCandy)).toEqual(createdCandy);
+      expect(await controller.findOne(productId)).toBe(product);
     });
   });
 
   describe('update', () => {
-    it('should update a product', () => {
-      const updatedCandy: UpdateProductDto = { name: 'Gummy Worms', description: 'Juicy and flavorful gummy worms', price: 2 };
-      const existingCandy: Product = { id: '1', name: 'Gummy Bears', description: 'Sweet and chewy gummy bears', price: 1 };
-      jest.spyOn(productService, 'update').mockReturnValue(existingCandy);
+    it('should update a product', async () => {
+      const productId = Faker.datatype.uuid();
+      const updateProductDto: UpdateProductDto = {
+        name: Faker.commerce.productName(),
+        description: Faker.lorem.paragraph(),
+        price: parseFloat(Faker.commerce.price()),
+        sellerId: Faker.datatype.uuid(),
+      };
+      const updatedProduct: Product = {
+        id: Faker.datatype.uuid(),
+        name: Faker.commerce.productName(), 
+        category: Faker.commerce.department(),
+        description: Faker.lorem.paragraph(),
+        price: parseFloat(Faker.commerce.price()),
+        sellerId: Faker.datatype.uuid(),
+        user: new User(),
+        orderItem: []
+      };
+      
+      
+      jest.spyOn(productService, 'update').mockResolvedValue(updatedProduct);
 
-      expect(controller.update('1', updatedCandy)).toEqual(existingCandy);
+      expect(await controller.update({}, productId, updateProductDto)).toBe(updatedProduct);
     });
   });
 
   describe('delete', () => {
-    it('should delete a product', () => {
-      const gummyBears: Product = { id: '1', name: 'Gummy Bears', description: 'Sweet and chewy gummy bears', price: 1 };
-      jest.spyOn(productService, 'delete').mockReturnValue(gummyBears);
-
-      expect(controller.delete('1')).toEqual(gummyBears);
+    it('should delete a product', async () => {
+      const productId = Faker.datatype.uuid();
+      const deletedProduct: Product = { 
+        id: productId,
+        name: '',
+        category: Faker.commerce.department(),
+        description: '',
+        price: 0,
+        sellerId: '',
+        user: new User(),
+        orderItem: []
+      };
+  
+      jest.spyOn(productService, 'delete').mockResolvedValue(deletedProduct); 
+  
+      expect(await controller.delete({}, productId)).toEqual(deletedProduct);
     });
   });
+
 });

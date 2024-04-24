@@ -1,89 +1,60 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import { ProductsService } from './product.service';
-import { NotFoundException } from '@nestjs/common';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Product, ProductCategory } from './model/product.entity';
+import { User } from '../user/entities/user.entity';
+import { Repository } from 'typeorm';
+import { NotFoundException, InternalServerErrorException } from '@nestjs/common';
 
 describe('ProductsService', () => {
-  let service: ProductsService;
+    let service: ProductsService;
+    let productRepository: Repository<Product>;
+    let userRepository: Repository<User>;
 
-  beforeEach(() => {
-    service = new ProductsService();
-  });
+    beforeEach(async () => {
+        const module: TestingModule = await Test.createTestingModule({
+            providers: [
+                ProductsService,
+                {
+                    provide: getRepositoryToken(Product),
+                    useValue: {
+                        find: jest.fn(),
+                        findOneBy: jest.fn(),
+                        create: jest.fn(),
+                        save: jest.fn(),
+                    },
+                },
+                {
+                    provide: getRepositoryToken(User),
+                    useValue: {
+                        findOneBy: jest.fn().mockResolvedValue({ id: 'user3', email: 'user3@example.com' }),
+                    },
+                },
+            ],
+        }).compile();
 
-  describe('findAll', () => {
-    it('should return an empty array if no products are present', () => {
-      const products = service.findAll();
-      expect(products).toEqual([]);
+        service = module.get<ProductsService>(ProductsService);
+        productRepository = module.get<Repository<Product>>(getRepositoryToken(Product));
+        userRepository = module.get<Repository<User>>(getRepositoryToken(User));
     });
 
-    it('should return all products', () => {
-      const product1: CreateProductDto = { name: 'Product 1', description: 'Description 1', price: 10 };
-      const product2: CreateProductDto = { name: 'Product 2', description: 'Description 2', price: 20 };
-      service.create(product1);
-      service.create(product2);
-
-      const products = service.findAll();
-      expect(products.length).toEqual(2);
-      expect(products[0].name).toEqual(product1.name);
-      expect(products[0].description).toEqual(product1.description);
-      expect(products[0].price).toEqual(product1.price);
-      expect(products[1].name).toEqual(product2.name);
-      expect(products[1].description).toEqual(product2.description);
-      expect(products[1].price).toEqual(product2.price);
+    it('test_findAll_returns_all_products_with_users', async () => {
+        const expectedProducts: Product[] = [
+            { id: '1', name: 'Product 1', description: 'Description 1', price: 10, category: ProductCategory.FOOD, sellerId: 'user1', user: null, orderItem: [] },
+            { id: '2', name: 'Product 2', description: 'Description 2', price: 20, category: ProductCategory.BOOKS, sellerId: 'user2', user: null, orderItem: [] },
+        ];
+        jest.spyOn(productRepository, 'find').mockResolvedValue(expectedProducts);
+        const products = await service.findAll();
+        expect(products).toEqual(expectedProducts);
+        expect(productRepository.find).toHaveBeenCalledWith({
+            relations: {
+                user: true,
+            },
+        });
     });
-  });
-
-  describe('findOneById', () => {
-    it('should throw NotFoundException if product is not found', () => {
-      expect(() => service.findOneById('invalid_id')).toThrowError(NotFoundException);
+    it('test_create_handles_database_errors_gracefully', async () => {
+        jest.spyOn(productRepository, 'save').mockRejectedValue({ code: '23505' });
+        await expect(service.create({ name: 'New Product', description: 'Description', price: 100, category: ProductCategory.FOOD, sellerId: 'user4' }))
+            .rejects.toThrow(InternalServerErrorException);
     });
-
-    it('should return the product if it exists', () => {
-      const product: CreateProductDto = { name: 'Product 1', description: 'Description 1', price: 10 };
-      const createdProduct = service.create(product);
-
-      const foundProduct = service.findOneById(createdProduct.id);
-      expect(foundProduct).toEqual(createdProduct);
-    });
-  });
-
-  describe('create', () => {
-    it('should create a new product', () => {
-      const createProductDto: CreateProductDto = { name: 'Product 1', description: 'Description 1', price: 10 };
-      const product = service.create(createProductDto);
-      expect(product.name).toEqual(createProductDto.name);
-      expect(product.description).toEqual(createProductDto.description);
-      expect(product.price).toEqual(createProductDto.price);
-    });
-  });
-
-  describe('update', () => {
-    it('should update a product', () => {
-      const createProductDto: CreateProductDto = { name: 'Product 1', description: 'Description 1', price: 10 };
-      const createdProduct = service.create(createProductDto);
-      const updateProductDto: UpdateProductDto = { name: 'Updated Product', description: 'Updated Description', price: 20 };
-      const updatedProduct = service.update(createdProduct.id, updateProductDto);
-      expect(updatedProduct.name).toEqual(updateProductDto.name);
-      expect(updatedProduct.description).toEqual(updateProductDto.description);
-      expect(updatedProduct.price).toEqual(updateProductDto.price);
-    });
-
-    it('should throw NotFoundException if product does not exist', () => {
-      const updateProductDto: UpdateProductDto = { name: 'Updated Product', description: 'Updated Description', price: 20 };
-      expect(() => service.update('invalid_id', updateProductDto)).toThrowError(NotFoundException);
-    });
-  });
-
-  describe('delete', () => {
-    it('should delete a product', () => {
-      const createProductDto: CreateProductDto = { name: 'Product 1', description: 'Description 1', price: 10 };
-      const product = service.create(createProductDto);
-      const deletedProduct = service.delete(product.id);
-      expect(deletedProduct).toEqual(product);
-    });
-
-    it('should throw NotFoundException if product does not exist', () => {
-      expect(() => service.delete('invalid_id')).toThrowError(NotFoundException);
-    });
-  });
 });

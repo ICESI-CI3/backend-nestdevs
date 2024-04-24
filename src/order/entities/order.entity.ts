@@ -18,6 +18,16 @@ export class Order {
   @JoinColumn ({name : 'buyer_id'})
   user: User;
 
+  @Column({name: 'seller_id'})
+  sellerId: string;
+
+  @ManyToOne(() => User, sellerUser=> sellerUser.soldOrders)
+  @JoinColumn ({name : 'seller_id'})
+  sellerUser: User;
+
   @OneToMany(() => OrderItem, orderItem => orderItem.order, {cascade:true})
   items: OrderItem[];
+
+  @Column()
+  accepted: boolean;
 }

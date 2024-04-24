@@ -1,11 +1,11 @@
-import { Controller, Get, HttpCode, Post, Param, Body, Put, Delete, ParseUUIDPipe, UseGuards } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post, Param, Body, Put, Delete, ParseUUIDPipe, UseGuards, Req } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './product.service';
-import { Product } from './model/product';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Roles } from 'src/auth/decorators/role-auth.decorator';
-import { User, UserRole } from 'src/user/entities/user.entity';
+import { Product } from './model/product.entity';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from '../auth/decorators/role-auth.decorator';
+import { UserRole } from '../user/entities/user.entity';
 
 @Controller('products')
 export class ProductController {
@@ -41,15 +41,23 @@ export class ProductController {
     @UseGuards(JwtAuthGuard)
     @Roles(UserRole.ADMIN,UserRole.SELLER)
     @Put(':id')
-    update(@Param('id', ParseUUIDPipe) id: string, @Body() updateProductDto: UpdateProductDto) {
-        return this.productService.update(id, updateProductDto);
+    update(@Req() req:any,@Param('id', ParseUUIDPipe) id: string, @Body() updateProductDto: UpdateProductDto) {
+        return this.productService.update(req,id, updateProductDto);
     }
 
 
     @UseGuards(JwtAuthGuard)
     @Roles(UserRole.ADMIN,UserRole.SELLER)
     @Delete(':id')
-    delete(@Param('id', ParseUUIDPipe) id: string) {
-        return this.productService.delete(id);
+    delete(@Req() req:any, @Param('id', ParseUUIDPipe) id: string) {
+        return this.productService.delete(req, id);
+    }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Roles(UserRole.ADMIN,UserRole.SELLER,UserRole.BUYER)
+    @Get('category/:category')
+    findProductsByCategory(category: string) {
+        return this.productService.findProductsByCategory(category);
     }
 }

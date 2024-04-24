@@ -1,4 +1,5 @@
-import { IsOptional, IsString, IsUUID } from "@nestjs/class-validator";
+import { IsOptional, IsString, IsUUID, IsNumber, IsEnum } from "@nestjs/class-validator";
+import { ProductCategory } from "../model/product.entity";
 
 export class UpdateProductDto {
     
@@ -9,12 +10,21 @@ export class UpdateProductDto {
     @IsString()
     @IsOptional()
     readonly name?: string;
+
+    @IsEnum(ProductCategory)
+    @IsOptional()
+    readonly category?: ProductCategory;
     
     @IsString()
     @IsOptional()
     readonly description?: string;
 
-    @IsString()
+    @IsNumber()
     @IsOptional()
     readonly price?: number;
+
+
+    @IsUUID()
+    @IsOptional()
+    readonly sellerId?: string;
 }
