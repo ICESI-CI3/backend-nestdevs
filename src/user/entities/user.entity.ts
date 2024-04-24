@@ -1,6 +1,6 @@
-import { Order } from "src/order/entities/order.entity";
-import { Product } from "src/product/model/product";
-import { Rating } from "src/rating/model/rating.entity";
+import { Order } from "../../order/entities/order.entity";
+import { Product } from "../../product/model/product";
+import { Rating } from "../../rating/model/rating.entity";
 import { AfterInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export enum UserRole {
