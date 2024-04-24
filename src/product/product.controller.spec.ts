@@ -4,8 +4,8 @@ import { ProductController } from './product.controller';
 import { ProductsService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from './model/product';
-import { User, UserRole } from '../user/entities/user.entity';
+import { Product } from './model/product.entity';
+import { User } from '../user/entities/user.entity';
 
 describe('ProductController', () => {
   let controller: ProductController;
@@ -40,6 +40,7 @@ describe('ProductController', () => {
     it('should create a product', async () => {
       const fakeProduct: CreateProductDto = {
         name: Faker.commerce.productName(),
+        category: Faker.commerce.department(),
         description: Faker.lorem.paragraph(),
         price: parseFloat(Faker.commerce.price()),
         sellerId: Faker.datatype.uuid(),
@@ -64,6 +65,7 @@ describe('ProductController', () => {
         {
           id: Faker.datatype.uuid(),
           name: Faker.commerce.productName(),
+          category: Faker.commerce.department(),
           description: Faker.lorem.paragraph(),
           price: parseFloat(Faker.commerce.price()),
           sellerId: Faker.datatype.uuid(),
@@ -73,6 +75,7 @@ describe('ProductController', () => {
         {
           id: Faker.datatype.uuid(),
           name: Faker.commerce.productName(),
+          category: Faker.commerce.department(),
           description: Faker.lorem.paragraph(),
           price: parseFloat(Faker.commerce.price()),
           sellerId: Faker.datatype.uuid(),
@@ -92,6 +95,7 @@ describe('ProductController', () => {
       const product: Product = {
         id: productId,
         name: Faker.commerce.productName(),
+        category: Faker.commerce.department(),
         description: Faker.lorem.paragraph(),
         price: parseFloat(Faker.commerce.price()),
         sellerId: Faker.datatype.uuid(),
@@ -116,6 +120,7 @@ describe('ProductController', () => {
       const updatedProduct: Product = {
         id: Faker.datatype.uuid(),
         name: Faker.commerce.productName(), 
+        category: Faker.commerce.department(),
         description: Faker.lorem.paragraph(),
         price: parseFloat(Faker.commerce.price()),
         sellerId: Faker.datatype.uuid(),
@@ -136,6 +141,7 @@ describe('ProductController', () => {
       const deletedProduct: Product = { 
         id: productId,
         name: '',
+        category: Faker.commerce.department(),
         description: '',
         price: 0,
         sellerId: '',
@@ -148,4 +154,5 @@ describe('ProductController', () => {
       expect(await controller.delete({}, productId)).toEqual(deletedProduct);
     });
   });
+
 });

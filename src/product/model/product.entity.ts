@@ -2,6 +2,14 @@ import { OrderItem } from "../../order/entities/orderItem.entity";
 import { User } from "../../user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
+export enum ProductCategory {
+    FOOD = 'food',
+    BOOKS = 'books',
+    ELECTRONICS = 'electronics',
+    FASHION = 'fashion',
+    SPORTS = 'sports',
+    OTHER = 'other'
+}
 @Entity()
 export class Product {
     @PrimaryGeneratedColumn('uuid')
@@ -12,6 +20,13 @@ export class Product {
 
     @Column('text')
     description: string;
+
+    @Column({
+        type: 'enum',
+        enum: ProductCategory,
+        default: ProductCategory.OTHER
+    })
+    category: ProductCategory;
 
     @Column('decimal', { precision: 6, scale: 0 })
     price: number;
@@ -25,8 +40,6 @@ export class Product {
 
     @OneToMany(() => OrderItem, (orderItem) => orderItem.product, {cascade:true})
     orderItem: OrderItem[];
-
-
     
 }
 
