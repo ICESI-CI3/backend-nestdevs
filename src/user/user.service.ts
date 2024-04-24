@@ -110,11 +110,16 @@ async registerBuyer(createUserDto: CreateCurrentUserDto) {
   async update(req:any, id: string, updateUserDto: UpdateUserDto) {
     const requser = req.user as User;
     const user: User = await this.userRepository.findOneBy({id:id})
-    if (requser.id==user.id||user.roles.includes(UserRole.ADMIN)){
+    if (requser.id==user.id||requser.roles.includes(UserRole.ADMIN)){
+
+      console.log('Entro al update')
+
       const user = await this.userRepository.preload({
         id: id,
         ...updateUserDto
       });
+
+      console.log(user);
 
       if ( !user ) throw new NotFoundException(`User with id: ${ id } not found`);
 
@@ -141,7 +146,7 @@ async registerBuyer(createUserDto: CreateCurrentUserDto) {
   async remove(req:any, id: string) {
     const requser = req.user as User;
     const user: User = await this.userRepository.findOneBy({id:id})
-    if (requser.id==user.id||user.roles.includes(UserRole.ADMIN)){
+    if (requser.id==user.id||requser.roles.includes(UserRole.ADMIN)){
       const user = await this.findOne(id)
       await this.userRepository.remove(user);
     }else{

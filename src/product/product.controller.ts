@@ -1,4 +1,4 @@
-import { Controller, Get, HttpCode, Post, Param, Body, Put, Delete, ParseUUIDPipe, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, HttpCode, Post, Param, Body, Put, Delete, ParseUUIDPipe, UseGuards, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './product.service';
@@ -32,6 +32,7 @@ export class ProductController {
 
     @UseGuards(JwtAuthGuard)
     @Roles(UserRole.ADMIN,UserRole.SELLER)
+    @UsePipes(ValidationPipe)
     @Post()
     @HttpCode(201)
     create(@Body() createProductDto: CreateProductDto) {

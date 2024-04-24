@@ -5,7 +5,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../common/dtos/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserRole } from './entities/user.entity';
-import { Roles } from '../auth/decorators/role-auth.decorator';
+import { Roles } from 'src/auth/decorators/role-auth.decorator';
 import { CreateCurrentUserDto } from './dto/create-curren.user.dto';
 
 
@@ -50,14 +50,14 @@ export class UserController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.ADMIN,UserRole.SELLER,UserRole.BUYER)
   @Patch(':id')
   update(@Req() req:any,@Param('id', ParseUUIDPipe) id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(req,id, updateUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
-  @Roles(UserRole.ADMIN)
+  @Roles(UserRole.ADMIN,UserRole.BUYER,UserRole.SELLER)
   @Delete(':id')
   remove(@Req() req:any,@Param('id', ParseUUIDPipe) id: string) {
     return this.userService.remove(req,id);
