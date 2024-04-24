@@ -121,8 +121,7 @@ export class OrderService {
 
   async removeOrder(req:any, id: string) { 
     const user = req.user as User;
-    const orderItem :OrderItem = await this.orderItemRepository.findOneBy({id:id})
-    const order : Order = await this.ordersRepository.findOneBy({id:orderItem.orderId})
+    const order : Order = await this.ordersRepository.findOneBy({id:id});
     if (order.buyerId==user.id||user.roles.includes(UserRole.ADMIN)){    
       const order = await this.findOne(id);
       return await this.ordersRepository.remove(order);
