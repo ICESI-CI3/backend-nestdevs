@@ -2,10 +2,10 @@ import { Controller, Get, HttpCode, Post, Param, Body, Put, Delete, ParseUUIDPip
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './product.service';
-import { Product } from './model/product';
+import { Product } from './model/product.entity';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Roles } from '../auth/decorators/role-auth.decorator';
-import { User, UserRole } from '../user/entities/user.entity';
+import { UserRole } from '../user/entities/user.entity';
 
 @Controller('products')
 export class ProductController {
@@ -51,5 +51,13 @@ export class ProductController {
     @Delete(':id')
     delete(@Req() req:any, @Param('id', ParseUUIDPipe) id: string) {
         return this.productService.delete(req, id);
+    }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Roles(UserRole.ADMIN,UserRole.SELLER,UserRole.BUYER)
+    @Get('category/:category')
+    findProductsByCategory(category: string) {
+        return this.productService.findProductsByCategory(category);
     }
 }
