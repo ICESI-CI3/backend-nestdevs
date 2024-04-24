@@ -7,8 +7,8 @@ import { UpdateOrderItemDto } from './dto/update-order.dto';
 import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/orderItem.entity';
 import { User, UserRole } from '../user/entities/user.entity';
-import { UnauthorizedException, NotFoundException } from '@nestjs/common';
 import * as faker from 'faker';
+import { ProductCategory } from '../product/model/product.entity';
 
 class MockOrderService {
   createOrder(createOrderDto: CreateOrderDto) {}
@@ -107,7 +107,7 @@ describe('OrderController', () => {
         description: faker.lorem.sentence(),
         price: faker.datatype.number(),
         sellerId: faker.datatype.uuid(),
-        user: { 
+        user: {
           id: faker.datatype.uuid(),
           email: faker.internet.email(),
           password: faker.internet.password(),
@@ -118,7 +118,8 @@ describe('OrderController', () => {
           ratings: [],
           ratingsGiven: []
         },
-        orderItem: []
+        orderItem: [],
+        category: ProductCategory.FOOD
       },
       quantity: faker.datatype.number(10)
     };

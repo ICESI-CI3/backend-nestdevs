@@ -4,7 +4,7 @@ import { AuthenticateDto } from "./dto/authenticate.dto";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { RoleGuard } from "./guards/role-auth.guard";
 import { Roles } from "./decorators/role-auth.decorator";
-import { UserRole } from "src/user/entities/user.entity";
+import { UserRole } from "../user/entities/user.entity";
 
 
 @Controller('auth')

@@ -28,7 +28,7 @@ export class RatingController{
     }
 
 
-    public getUserIdFromRequest(@Req() request: Request): string {
+    private getUserIdFromRequest(@Req() request: Request): string {
         const authHeader = request.headers['authorization'];
         if (!authHeader) {
             throw new UnauthorizedException('Authorization header is missing');

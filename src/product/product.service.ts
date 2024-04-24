@@ -33,6 +33,7 @@ export class ProductsService {
         }
         return product;
     }
+    
 
     findProductsByCategory(category: string) {
         try{
