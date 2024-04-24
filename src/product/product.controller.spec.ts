@@ -3,7 +3,7 @@ import { ProductController } from './product.controller';
 import { ProductsService } from './product.service';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
-import { Product } from './model/product';
+import { Product } from './model/product.entity';
 
 describe('ProductController', () => {
   let controller: ProductController;

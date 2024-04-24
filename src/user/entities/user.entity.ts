@@ -1,5 +1,5 @@
 import { Order } from "src/order/entities/order.entity";
-import { Product } from "src/product/model/product";
+import { Product } from "src/product/model/product.entity";
 import { Rating } from "src/rating/model/rating.entity";
 import { AfterInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
