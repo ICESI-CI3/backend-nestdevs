@@ -6,7 +6,7 @@ import { Order } from './entities/order.entity';
 import { Repository } from 'typeorm';
 import { OrderItem } from './entities/orderItem.entity';
 import { CreateOrderItemDto } from './dto/create-orderItem.dto';
-import { User, UserRole } from 'src/user/entities/user.entity';
+import { User, UserRole } from '../user/entities/user.entity';
 import { use } from 'passport';
 
 @Injectable()

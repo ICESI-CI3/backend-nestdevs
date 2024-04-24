@@ -4,8 +4,8 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Rating } from "./model/rating.entity";
 import { Repository } from "typeorm";
 import {v4 as uuid} from 'uuid';
-import { User } from "src/user/entities/user.entity";
-import { PaginationDto } from "src/common/dtos/pagination.dto";
+import { User } from "../user/entities/user.entity";
+import { PaginationDto } from "../common/dtos/pagination.dto";
 
 @Injectable()
 export class RatingService{
@@ -55,16 +55,18 @@ export class RatingService{
           })
     }
 
-    async getSellerRating(id: string) {
-
-
-
-        const ratings =  this.ratingRepository.findBy({
-            sellerId:id
-        });
-
-        console.log(ratings)
-    }
+    async getSellerRating(id: string): Promise<Rating[]> {
+        try {
+          const ratings = await this.ratingRepository.findBy({
+            sellerId: id,
+          });
+          console.log(ratings); 
+          return ratings; 
+        } catch (error) {
+          console.error('Error obtaining ratings:', error);
+          throw error; 
+        }
+      }
 
     private handleDBErrors( error: any ): never {
 
