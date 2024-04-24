@@ -6,7 +6,7 @@ import { ProductsService } from './product.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Product } from './model/product.entity';
 import { ConfigModule } from "@nestjs/config";
-import { User } from "src/user/entities/user.entity";
+import { User } from "../user/entities/user.entity";
 
 @Module({
   controllers: [ProductController],
