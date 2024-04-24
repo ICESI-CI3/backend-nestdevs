@@ -33,6 +33,7 @@ export class ProductsService {
         }
         return product;
     }
+    
 
     findProductsByCategory(category: string) {
         try{
@@ -80,16 +81,13 @@ export class ProductsService {
             throw new UnauthorizedException;
         }
     }
-    private handleDBExceptions( error: any ) {
-
-        if ( error.code === '23505' )
-          throw new BadRequestException(error.detail);
-        
-        this.logger.error(error)
-        // console.log(error)
-        throw new InternalServerErrorException('Unexpected error, check server logs');
-    
-      }
+    handleDBExceptions(error: any) {
+        if (error.code === '23505') {
+            throw new InternalServerErrorException(error.detail);
+        } else {
+            throw new BadRequestException(error.detail); 
+        }
+    }
 
     async delete(req: any, id: string) {
         const user = req.user as User;

@@ -4,7 +4,7 @@ import { Rating } from './model/rating.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { RatingController } from './rating.controller';
 import { RatingService } from './rating.service';
-import { User } from 'src/user/entities/user.entity';
+import { User } from '../user/entities/user.entity';
 
 @Module({
     controllers : [RatingController],
