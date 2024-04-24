@@ -5,7 +5,7 @@ import { AuthenticateDto } from './dto/authenticate.dto';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { RoleGuard } from './guards/role-auth.guard';
 import { ExecutionContext } from '@nestjs/common';
-import { UserRole } from 'src/user/entities/user.entity';
+
 
 describe('AuthController', () => {
   let controller: AuthController;
