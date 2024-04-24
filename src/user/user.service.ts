@@ -2,14 +2,16 @@ import { BadRequestException, Injectable, InternalServerErrorException, Logger, 
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import * as bcrypt from 'bcrypt';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import {v4 as uuid} from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { CreateCurrentUserDto } from './dto/create-curren.user.dto';
 
 @Injectable()
 export class UserService {
+
   private users : User[] =[];
   private readonly logger = new Logger('UserService');
   constructor(
@@ -27,6 +29,48 @@ export class UserService {
       });
       
       await this.userRepository.save(user);
+      delete user.password;
+
+      return user;
+
+    }catch(error){
+      this.handleDBErrors(error);
+    }
+  }
+
+  async registerSeller(createUserDto: CreateCurrentUserDto) {
+    try{
+      const {password,...userData} = createUserDto;
+      const user = this.userRepository.create({
+        ...userData,
+        roles : [UserRole.SELLER],
+        password : bcrypt.hashSync(password, 10),
+        id : uuid()
+      });
+      
+      await this.userRepository.save(user);
+
+      delete user.password;
+
+      return user;
+
+    }catch(error){
+      this.handleDBErrors(error);
+    }
+  }
+
+  async registerBuyer(createUserDto: CreateCurrentUserDto) {
+    try{
+      const {password,...userData} = createUserDto;
+      const user = this.userRepository.create({
+        ...userData,
+        roles : [UserRole.BUYER],
+        password : bcrypt.hashSync(password, 10),
+        id : uuid()
+      });
+      
+      await this.userRepository.save(user);
+
       delete user.password;
 
       return user;
