@@ -1,5 +1,5 @@
-import { OrderItem } from "src/order/entities/orderItem.entity";
-import { User } from "src/user/entities/user.entity";
+import { OrderItem } from "../../order/entities/orderItem.entity";
+import { User } from "../../user/entities/user.entity";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 export enum ProductCategory {

@@ -5,7 +5,7 @@ import { ProductsService } from './product.service';
 import { Product } from './model/product.entity';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Roles } from 'src/auth/decorators/role-auth.decorator';
-import { User, UserRole } from 'src/user/entities/user.entity';
+import { UserRole } from 'src/user/entities/user.entity';
 
 @Controller('products')
 export class ProductController {
@@ -51,5 +51,13 @@ export class ProductController {
     @Delete(':id')
     delete(@Req() req:any, @Param('id', ParseUUIDPipe) id: string) {
         return this.productService.delete(req, id);
+    }
+
+
+    @UseGuards(JwtAuthGuard)
+    @Roles(UserRole.ADMIN,UserRole.SELLER,UserRole.BUYER)
+    @Get('category/:category')
+    findProductsByCategory(category: string) {
+        return this.productService.findProductsByCategory(category);
     }
 }

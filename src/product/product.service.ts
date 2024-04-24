@@ -1,18 +1,21 @@
 import { Injectable, NotFoundException, InternalServerErrorException, BadRequestException, Logger, UnauthorizedException } from '@nestjs/common';
-import { Product } from "./model/product.entity";
+import { Product, ProductCategory } from "./model/product.entity";
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
-import { User, UserRole } from 'src/user/entities/user.entity';
+import { In, Repository } from 'typeorm';
+import { User, UserRole } from '../user/entities/user.entity';
 
 @Injectable()
 export class ProductsService {
+
     private products: Product[] = [];
     private readonly logger = new Logger('ProductsService');
     constructor(
         @InjectRepository(Product)
         private readonly productsRepository: Repository<Product>,
+        @InjectRepository(User)
+        private readonly userRepository: Repository<User>,
     ){}
     
     async findAll() {
@@ -31,9 +34,27 @@ export class ProductsService {
         return product;
     }
 
+    findProductsByCategory(category: string) {
+        try{
+            return this.productsRepository.findBy({category:ProductCategory[category]});
+        }catch(error){
+            this.handleDBExceptions(error);
+        }
+    }
+
     async create(createProductDto: CreateProductDto) {
-        const product = this.productsRepository.create(createProductDto);
-        return await this.productsRepository.save(product);
+        
+        try{
+            const user = await this.userRepository.findOneBy({id:createProductDto.sellerId});
+
+            if ( !user ) throw new NotFoundException(`User with id: ${ createProductDto.sellerId } not found`);
+    
+            const product = this.productsRepository.create(createProductDto);
+
+            return await this.productsRepository.save(product);
+        }catch(error){
+            this.handleDBExceptions(error);
+        }
     }
 
     async update(req:any, id: string, updateProductDto: UpdateProductDto) {

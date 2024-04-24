@@ -2,10 +2,10 @@ import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { PaginationDto } from 'src/common/dtos/pagination.dto';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { PaginationDto } from '../common/dtos/pagination.dto';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserRole } from './entities/user.entity';
-import { Roles } from 'src/auth/decorators/role-auth.decorator';
+import { Roles } from '../auth/decorators/role-auth.decorator';
 
 @Controller('user')
 export class UserController {
