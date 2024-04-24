@@ -7,9 +7,14 @@ import {v4 as uuid} from 'uuid';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { PaginationDto } from 'src/common/dtos/pagination.dto';
+import { CreateCurrentUserDto } from './dto/create-curren.user.dto';
 
 @Injectable()
 export class UserService {
+
+  private users : User[] =[];
+  private readonly logger = new Logger('UserService');
+  
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -33,6 +38,49 @@ export class UserService {
       this.handleDBErrors(error);
     }
   }
+
+async registerSeller(createUserDto: CreateCurrentUserDto) {
+    try{
+      const {password,...userData} = createUserDto;
+      const user = this.userRepository.create({
+        ...userData,
+        roles : [UserRole.SELLER],
+        password : bcrypt.hashSync(password, 10),
+        id : uuid()
+      });
+      
+      await this.userRepository.save(user);
+
+      delete user.password;
+
+      return user;
+
+    }catch(error){
+      this.handleDBErrors(error);
+    }
+}
+
+async registerBuyer(createUserDto: CreateCurrentUserDto) {
+    try{
+      const {password,...userData} = createUserDto;
+      const user = this.userRepository.create({
+        ...userData,
+        roles : [UserRole.BUYER],
+        password : bcrypt.hashSync(password, 10),
+        id : uuid()
+      });
+      
+      await this.userRepository.save(user);
+
+      delete user.password;
+
+      return user;
+
+    }catch(error){
+      this.handleDBErrors(error);
+    }
+  }
+
 
   async findAll( paginationDto: PaginationDto ) {
 

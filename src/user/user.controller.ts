@@ -1,11 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe, UseGuards, Req, UsePipes, ValidationPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe, UseGuards, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { PaginationDto } from '../common/dtos/pagination.dto';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { UserRole } from './entities/user.entity';
-import { Roles } from '../auth/decorators/role-auth.decorator';
+import { Roles } from 'src/auth/decorators/role-auth.decorator';
+import { CreateCurrentUserDto } from './dto/create-curren.user.dto';
+
 
 @Controller('user')
 export class UserController {
@@ -14,10 +16,23 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN)
+  @UsePipes(ValidationPipe)
   @Post()
   @UsePipes(ValidationPipe)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
+  }
+
+  @UsePipes(ValidationPipe)
+  @Post('seller')
+  registerSeller(@Body() createUserDto: CreateCurrentUserDto) {
+    return this.userService.registerSeller(createUserDto);
+  }
+
+  @UsePipes(ValidationPipe)
+  @Post('buyer')
+  registerBuyer(@Body() createUserDto: CreateCurrentUserDto) {
+    return this.userService.registerBuyer(createUserDto);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -26,11 +41,6 @@ export class UserController {
   findAll(@Query() paginationDto:PaginationDto) {
     return this.userService.findAll(paginationDto);
   }
-
-
-  
-  
-
 
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN)
