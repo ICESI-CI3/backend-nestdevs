@@ -6,7 +6,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from "./dto/create.user.dto";
 import { User } from "src/user/entities/user.entity";
 
 
@@ -20,9 +19,6 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
-    async register(createUserDto: CreateUserDto) {
-
-    }
 
     async login(authenticateDto: AuthenticateDto) {
 

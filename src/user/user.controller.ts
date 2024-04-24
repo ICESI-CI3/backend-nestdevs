@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe, UseGuards, Req } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe, UseGuards, Req, UsePipes, ValidationPipe } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -15,6 +15,7 @@ export class UserController {
   //@UseGuards(JwtAuthGuard)
   //@Roles(UserRole.ADMIN)
   @Post()
+  @UsePipes(ValidationPipe)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }
@@ -25,6 +26,10 @@ export class UserController {
   findAll(@Query() paginationDto:PaginationDto) {
     return this.userService.findAll(paginationDto);
   }
+
+
+  
+  
 
 
   @UseGuards(JwtAuthGuard)

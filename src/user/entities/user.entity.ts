@@ -1,8 +1,10 @@
 
+import { Matches } from "@nestjs/class-validator";
 import { Order } from "../../order/entities/order.entity";
 import { Product } from "../../product/model/product.entity";
 import { Rating } from "../../rating/model/rating.entity";
 import { AfterInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { IsEnum } from "class-validator";
 
 export enum UserRole {
     ADMIN = 'admin',
@@ -19,9 +21,15 @@ export class User {
     email: string;
 
     @Column('text')
+    name: string;
+
+    @Column('text')
+    lastName: string;
+
+    @Column('text')
     password: string;
 
-    @Column('text',{array: true })
+    @Column('text', {array: true})
     roles: UserRole[];
 
     @Column('timestamp',
