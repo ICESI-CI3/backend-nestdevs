@@ -99,7 +99,7 @@ export class ProductsService {
             throw new UnauthorizedException;
         }
     }
-    findOne(id: string) {
-        return this.productsRepository.findOneBy({id:id});
+    async findOne(id: string) {
+        return await this.productsRepository.findOneBy({id:id});
     }
 }

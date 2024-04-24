@@ -54,6 +54,13 @@ export class OrderController {
 
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN,UserRole.BUYER)
+  @Patch('/accept/:id')
+  acceptOrder(@Req() req: any,@Param('id') id: string, @Body() updateOrderItemDto: UpdateOrderItemDto) {
+    return this.orderService.acceptOrder(req,id);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.ADMIN,UserRole.BUYER)
   @Delete(':id')
   remove(@Req() req:any,@Param('id') id: string) {
     return this.orderService.removeOrder(req,id);

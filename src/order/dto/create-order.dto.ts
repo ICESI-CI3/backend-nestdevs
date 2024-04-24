@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsArray, ArrayNotEmpty, ArrayMinSize, IsDate, IsNumber, IsInt, Min, IsUUID } from "@nestjs/class-validator";
+import { IsNotEmpty, IsArray, ArrayNotEmpty, ArrayMinSize, IsDate, IsNumber, IsInt, Min, IsUUID, IsString } from "@nestjs/class-validator";
 import { Column } from 'typeorm';
 import { CreateOrderItemDto } from "./create-orderItem.dto";
 
