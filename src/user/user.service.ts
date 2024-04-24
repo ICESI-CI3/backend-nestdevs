@@ -10,8 +10,6 @@ import { PaginationDto } from 'src/common/dtos/pagination.dto';
 
 @Injectable()
 export class UserService {
-  private users : User[] =[];
-  private readonly logger = new Logger('UserService');
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -36,11 +34,11 @@ export class UserService {
     }
   }
 
-  findAll( paginationDto: PaginationDto ) {
+  async findAll( paginationDto: PaginationDto ) {
 
     const { limit = 10, offset = 0 } = paginationDto;
 
-    return this.userRepository.find({
+    return await this.userRepository.find({
       take: limit,
       skip: offset,
       relations:{
@@ -48,6 +46,13 @@ export class UserService {
         orders: true,
       }
     })
+  }
+
+  async findAllSeller(){
+    return await this.userRepository
+      .createQueryBuilder('user')
+      .where(':role = ANY(user.roles)', { role: UserRole['SELLER'] })
+      .getMany();
   }
 
   findOne(id: string) {
@@ -70,23 +75,20 @@ export class UserService {
         return user;
         
       } catch (error) {
-        this.handleDBExceptions(error);
+        this.handleDBErrors(error);
       }
       return `This action updates a #${id} user`;
     }else{
       throw new UnauthorizedException;
     }
   }
-  private handleDBExceptions( error: any ) {
 
-    if ( error.code === '23505' )
-      throw new BadRequestException(error.detail);
-    
-    this.logger.error(error)
-    // console.log(error)
-    throw new InternalServerErrorException('Unexpected error, check server logs');
-
+  fillUsersWithSeedData(users: CreateUserDto[]) {
+    for (const user of users) {
+      this.create(user);
+    }
   }
+
 
   async remove(req:any, id: string) {
     const requser = req.user as User;

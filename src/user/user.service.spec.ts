@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { UserService } from './user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
-import { User } from './entities/user.entity';
+import { User, UserRole } from './entities/user.entity';
 import { Repository } from 'typeorm';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UnauthorizedException } from '@nestjs/common';
@@ -37,9 +37,10 @@ describe('UserService', () => {
   it('test_create_user_success', async () => {
     const createUserDto: CreateUserDto = {
       email: 'test@example.com',
+      name: 'Test',
+      lastName: 'User',
       password: 'password123',
-      role: 'buyer',
-      slug: ''
+      roles: [UserRole.SELLER]
     };
     const expectedUser = {
       ...createUserDto,

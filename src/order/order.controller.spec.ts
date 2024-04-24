@@ -55,6 +55,8 @@ describe('OrderController', () => {
       buyerId: faker.datatype.uuid(),
       user: { 
         id: faker.datatype.uuid(),
+        name: faker.name.firstName(),
+        lastName: faker.name.lastName(),
         email: faker.internet.email(),
         password: faker.internet.password(),
         roles: [UserRole.BUYER],
@@ -89,6 +91,8 @@ describe('OrderController', () => {
         buyerId: faker.datatype.uuid(),
         user: { 
           id: faker.datatype.uuid(),
+          name: faker.name.firstName(),
+          lastName: faker.name.lastName(),
           email: faker.internet.email(),
           password: faker.internet.password(),
           roles: [UserRole.BUYER],
@@ -109,6 +113,8 @@ describe('OrderController', () => {
         sellerId: faker.datatype.uuid(),
         user: {
           id: faker.datatype.uuid(),
+          name: faker.name.firstName(),
+          lastName: faker.name.lastName(),
           email: faker.internet.email(),
           password: faker.internet.password(),
           roles: [UserRole.SELLER],

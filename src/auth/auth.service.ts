@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable, UnauthorizedException } from "@nestjs/common";
+import {Injectable, UnauthorizedException } from "@nestjs/common";
 import {v4 as uuid} from 'uuid';
 import { AuthenticateDto } from "./dto/authenticate.dto";
 import { sign } from 'jsonwebtoken'
@@ -6,7 +6,6 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { JwtService } from "@nestjs/jwt";
 import * as bcrypt from 'bcrypt';
-import { CreateUserDto } from "./dto/create.user.dto";
 import { User } from "../user/entities/user.entity";
 
 
@@ -20,9 +19,6 @@ export class AuthService {
         private readonly jwtService: JwtService
     ) {}
 
-    async register(createUserDto: CreateUserDto) {
-
-    }
 
     async login(authenticateDto: AuthenticateDto) {
 

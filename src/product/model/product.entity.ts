@@ -4,6 +4,7 @@ import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColum
 
 export enum ProductCategory {
     FOOD = 'food',
+    DRINK = 'drink',
     BOOKS = 'books',
     ELECTRONICS = 'electronics',
     FASHION = 'fashion',
@@ -31,7 +32,7 @@ export class Product {
     @Column('decimal', { precision: 6, scale: 0 })
     price: number;
     
-    @Column( {name : 'seller_id'})
+    @Column('uuid',{name : 'seller_id'})
     sellerId : string;
 
     @ManyToOne(() => User, (user) => user.products)

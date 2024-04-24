@@ -1,7 +1,5 @@
 
-import { IsArray, IsEnum, IsNotEmpty, IsNumber, IsString, ValidateNested, isString } from "@nestjs/class-validator";
-import { CreateUserDto } from "src/auth/dto/create.user.dto";
-import { User } from "src/user/entities/user.entity";
+import { IsEnum, IsNotEmpty, IsNumber, IsString, ValidateNested, isString } from "@nestjs/class-validator";
 import { ProductCategory } from "../model/product.entity";
 
 export class CreateProductDto {
@@ -17,8 +15,7 @@ export class CreateProductDto {
   @IsNumber()
   readonly price: number;
 
-  @IsEnum(ProductCategory)
-  @IsString()
+  @IsEnum(ProductCategory, {each:true})
   readonly category: ProductCategory;
 
   @IsString()

@@ -40,9 +40,10 @@ describe('UserController', () => {
     it('should create a user', async () => {
       const createUserDto: CreateUserDto = {
         email: Faker.internet.email(),
+        name: Faker.name.firstName(),
+        lastName: Faker.name.lastName(),
         password: Faker.internet.password(),
-        role: 'buyer',
-        slug: Faker.lorem.slug(),
+        roles: [UserRole.SELLER],
       };
 
       await controller.create(createUserDto);
@@ -67,6 +68,8 @@ describe('UserController', () => {
       const mockUser: User = {
         id: userId,
         email: Faker.internet.email(),
+        name: Faker.name.firstName(),
+        lastName: Faker.name.lastName(),
         password: Faker.internet.password(), 
         roles: [UserRole.BUYER],
         createdAt: Faker.date.past().getTime(), 
