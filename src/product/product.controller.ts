@@ -3,9 +3,9 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { ProductsService } from './product.service';
 import { Product } from './model/product.entity';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { Roles } from 'src/auth/decorators/role-auth.decorator';
-import { UserRole } from 'src/user/entities/user.entity';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { Roles } from '../auth/decorators/role-auth.decorator';
+import { UserRole } from '../user/entities/user.entity';
 
 @Controller('products')
 export class ProductController {

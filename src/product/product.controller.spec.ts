@@ -154,4 +154,5 @@ describe('ProductController', () => {
       expect(await controller.delete({}, productId)).toEqual(deletedProduct);
     });
   });
+
 });
