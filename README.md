@@ -57,17 +57,52 @@ $ npm run test:e2e
 # test coverage
 $ npm run test:cov
 ```
+# Icesi Marketplace
 
-## Support
+La Comunidad Universitaria de Icesi actualmente enfrenta desafíos significativos en el proceso de comercialización de sus diversos productos. El uso de WhatsApp como plataforma principal ha llevado a la saturación de los grupos, lo que ha dificultado que los usuarios potenciales conozcan y accedan a los productos disponibles. Esta situación no solo afecta a los compradores, sino también a los vendedores, quienes se ven limitados en su capacidad de promover y vender sus productos de manera efectiva.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+Ante esta problemática, surge la necesidad de implementar un sistema de gestión de ventas moderno y eficiente que optimice el proceso de comercialización y brinde una mejor experiencia tanto a los compradores como a los vendedores.
 
-## Stay in touch
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## Instalación
 
-## License
+1. Clona este repositorio en tu máquina local.
+2. Ejecuta `npm install` para instalar todas las dependencias.
 
-Nest is [MIT licensed](LICENSE).
+## Configuración
+
+Antes de ejecutar la aplicación, necesitas configurar algunos archivos de configuración:
+
+1. Crea un archivo `.env` en la raíz del proyecto.
+2. Agrega las siguientes variables de entorno en el archivo `.env`:
+
+```bash
+DB_PASSWORD = Icesi2021
+DB_NAME = db_icesi_marketplace
+
+DATABASE_HOST = localhost
+DATABASE_PORT = 5432
+DATABASE_USER = postgres
+DATABASE_PASSWORD = Icesi2021
+DATABASE_NAME = db_icesi_marketplace
+
+JWT_SECRET = icesi_marketplace
+```
+
+
+Una vez que hayas instalado las dependencias y configurado los archivos de entorno, puedes ejecutar la aplicación:
+`npm start`
+
+# Ejecutar Docker Compose:
+
+Primero debes de tener la aplicación de docker abierta.
+
+Abre una terminal en el directorio donde tienes tu archivo docker-compose.yml y ejecuta el siguiente comando:
+`docker-compose up -d`
+
+# Ejecutar las pruebas:
+Una vez que todas las dependencias estén instaladas y las variables de entorno estén configuradas, puedes ejecutar las pruebas automatizadas utilizando el siguiente comando:
+`npx jest` o `npm test`
+
+
+
