@@ -64,9 +64,27 @@ describe('OrderController', () => {
         products: [],
         orders: [],
         ratings: [],
-        ratingsGiven: []
+        ratingsGiven: [],
+        soldOrders: []
       },
-      items: []
+      items: [],
+      sellerId: faker.datatype.uuid(),
+      sellerUser: {
+        id: faker.datatype.uuid(),
+        name: faker.name.firstName(),
+        lastName: faker.name.lastName(),
+        email: faker.internet.email(),
+        password: faker.internet.password(),
+        roles: [UserRole.SELLER],
+        createdAt: Date.now(),
+        products: [],
+        orders: [],
+        ratings: [],
+        ratingsGiven: [],
+        soldOrders: []
+      },
+      accepted : false
+
     };
 
     jest.spyOn(orderService, 'createOrder').mockResolvedValue(result);
@@ -100,8 +118,25 @@ describe('OrderController', () => {
           products: [],
           orders: [],
           ratings: [],
-          ratingsGiven: []
+          ratingsGiven: [],
+          soldOrders: []
         },
+        sellerId: faker.datatype.uuid(),
+        sellerUser: {
+          id: faker.datatype.uuid(),
+          name: faker.name.firstName(),
+          lastName: faker.name.lastName(),
+          email: faker.internet.email(),
+          password: faker.internet.password(),
+          roles: [UserRole.SELLER],
+          createdAt: Date.now(),
+          products: [],
+          orders: [],
+          ratings: [],
+          ratingsGiven: [],
+          soldOrders: []
+        },
+        accepted : false,
         items: []
       },
       productId: faker.datatype.uuid(),
@@ -122,7 +157,8 @@ describe('OrderController', () => {
           products: [],
           orders: [],
           ratings: [],
-          ratingsGiven: []
+          ratingsGiven: [],
+          soldOrders: [],
         },
         orderItem: [],
         category: ProductCategory.FOOD

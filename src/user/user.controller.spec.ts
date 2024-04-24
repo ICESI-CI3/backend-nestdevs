@@ -77,6 +77,7 @@ describe('UserController', () => {
         orders: [], 
         ratings: [], 
         ratingsGiven: [], 
+        soldOrders: []
       };
       jest.spyOn(userService, 'findOne').mockResolvedValue(mockUser);
   

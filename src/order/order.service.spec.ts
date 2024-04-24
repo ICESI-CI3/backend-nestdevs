@@ -6,16 +6,24 @@ import { Order } from './entities/order.entity';
 import { OrderItem } from './entities/orderItem.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 import { UnauthorizedException } from '@nestjs/common';
+import { ProductModule } from '../product/product.module';
+import { ProductsService } from '../product/product.service';
+import { Product } from '../product/model/product.entity';
+import { User } from '../user/entities/user.entity';
 
 describe('OrderService', () => {
   let service: OrderService;
+  let productsService: ProductsService;
   let orderRepo: Repository<Order>;
   let orderItemRepo: Repository<OrderItem>;
+  let productRepository: Repository<Product>;
+  let userRepository: Repository<User>;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         OrderService,
+        ProductsService,
         {
           provide: getRepositoryToken(Order),
           useClass: Repository,
@@ -24,6 +32,13 @@ describe('OrderService', () => {
           provide: getRepositoryToken(OrderItem),
           useClass: Repository,
         },
+        {
+          provide: getRepositoryToken(Product),
+          useClass: Repository,
+        },{
+          provide: getRepositoryToken(User),
+          useClass: Repository,
+        }
       ],
     }).compile();
 

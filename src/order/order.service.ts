@@ -8,7 +8,7 @@ import { OrderItem } from './entities/orderItem.entity';
 import { CreateOrderItemDto } from './dto/create-orderItem.dto';
 import { User, UserRole } from '../user/entities/user.entity';
 import { use } from 'passport';
-import { ProductsService } from 'src/product/product.service';
+import { ProductsService } from '../product/product.service';
 import { Product } from 'src/product/model/product.entity';
 
 @Injectable()
