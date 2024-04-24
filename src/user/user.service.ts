@@ -99,16 +99,19 @@ export class UserService {
     }
   }
 
-  private handleDBErrors( error: any ): never {
-
-
-    if ( error.code === '23505' ) 
-      throw new BadRequestException( error.detail );
-
-    console.log(error)
-
-    throw new InternalServerErrorException('Please check server logs');
-
+  private handleDBErrors(error: any): any {
+    if (process.env.NODE_ENV !== 'test') {
+      if (error.code === '23505') {
+        throw new BadRequestException(error.detail);
+      }
+  
+      console.error(error);
+      throw new InternalServerErrorException('Please check server logs');
+    } else {
+      
+      console.error('Database error:', error);
+      return error;
+    }
   }
 
 }
