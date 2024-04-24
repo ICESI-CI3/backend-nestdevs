@@ -34,6 +34,9 @@ export class User {
     @OneToMany(() => Order, order => order.user, {cascade:true})
     orders: Order[];
 
+    @OneToMany(() => Order, order => order.sellerUser)
+    soldOrders: Order[];
+
     @OneToMany(() => Rating, rating => rating.seller, {cascade:true})
     ratings: Rating[];
 
