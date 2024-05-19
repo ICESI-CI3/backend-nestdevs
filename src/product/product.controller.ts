@@ -18,7 +18,7 @@ export class ProductController {
     @UseGuards(JwtAuthGuard)
     @Roles(UserRole.ADMIN,UserRole.SELLER,UserRole.BUYER)
     @Get()
-    findAll() {
+    findAll(): Promise<Product[]> { // Corregido: El tipo de retorno debe ser Promise<Product[]>
         return this.productService.findAll();
     }
 
@@ -26,8 +26,8 @@ export class ProductController {
     @UseGuards(JwtAuthGuard)
     @Roles(UserRole.ADMIN,UserRole.SELLER,UserRole.BUYER)
     @Get(':id')
-    findOne(@Param('id', ParseUUIDPipe) id: string): Product {
-        return this.productService.findOneById(id);
+    async findOne(@Param('id', ParseUUIDPipe) id: string): Promise<Product> {
+        return await this.productService.findOneById(id);
     }
 
     @UseGuards(JwtAuthGuard)
