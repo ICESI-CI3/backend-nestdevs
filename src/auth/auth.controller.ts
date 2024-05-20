@@ -1,4 +1,4 @@
-import { Body, Controller, Get, HttpStatus, Post, Res, UseGuards } from "@nestjs/common";
+import { Body, Controller, Get, HttpCode, HttpStatus, Post, Res, UseGuards } from "@nestjs/common";
 import { AuthService } from "./auth.service";
 import { AuthenticateDto } from "./dto/authenticate.dto";
 import { JwtAuthGuard } from "./guards/jwt-auth.guard";
@@ -11,7 +11,8 @@ import { UserRole } from "../user/entities/user.entity";
 export class AuthController {
     constructor(private readonly authService: AuthService) {}
     
-    @Get('login')
+    @Post('login')
+    @HttpCode(HttpStatus.OK)
     login(@Body() AuthenticateDto: AuthenticateDto){
         return this.authService.login(AuthenticateDto);
     }

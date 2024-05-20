@@ -28,7 +28,7 @@ export class AuthService {
             where : {
                 email
             },
-            select : {email : true, password : true, id : true}
+            select : ['id', 'email','name','lastName','password', 'roles']
         });
 
         if (!user) {
@@ -39,9 +39,17 @@ export class AuthService {
             throw new UnauthorizedException('Invalid credentials');
         }
 
+
+        const { id, name, lastName, roles } = user;
+
+        
         return {
-            ...user,
-            token : this.jwtService.sign({id : user.id})
+            id,
+            name,
+            lastName,
+            email,
+            roles,
+            token : this.jwtService.sign({id : user.id,roles: user.roles})
         }
 
     }
