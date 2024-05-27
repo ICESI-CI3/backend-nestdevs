@@ -15,6 +15,7 @@ export class ProductController {
     ){}
 
 
+
     @UseGuards(JwtAuthGuard)
     @Roles(UserRole.ADMIN,UserRole.SELLER,UserRole.BUYER)
     @Get()
@@ -60,5 +61,14 @@ export class ProductController {
     @Get('category/:category')
     findProductsByCategory(category: string) {
         return this.productService.findProductsByCategory(category);
+    }
+
+
+    // Obtener todos los productos de un usuario
+    @UseGuards(JwtAuthGuard)
+    @Roles(UserRole.ADMIN,UserRole.SELLER,UserRole.BUYER)
+    @Get('user/:userId')
+    findProductsByUser(@Param('userId', ParseUUIDPipe) userId: string) {
+        return this.productService.findProductsByUser(userId);
     }
 }

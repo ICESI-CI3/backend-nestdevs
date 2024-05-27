@@ -9,6 +9,7 @@ import { User, UserRole } from '../user/entities/user.entity';
 @Injectable()
 export class ProductsService {
 
+
     private products: Product[] = [];
     private readonly logger = new Logger('ProductsService');
     constructor(
@@ -103,5 +104,13 @@ export class ProductsService {
     }
     async findOne(id: string) {
         return await this.productsRepository.findOneBy({id:id});
+    }
+
+    findProductsByUser(userId: string) {
+        try{
+            return this.productsRepository.findBy({sellerId:userId});
+        }catch(error){
+            this.handleDBExceptions(error);
+        }
     }
 }
