@@ -15,6 +15,8 @@ export class SeedService {
 
     
     async seed() {
+
+        /*
         await this.userService.fillUsersWithSeedData(sellerSeed);
 
 
@@ -24,12 +26,12 @@ export class SeedService {
             for(const p of productSeed){
                 const product = {
                     ...p,
-                    sellerId: seller.id
-                
+                    sellerId: seller.id                
                 }
-                await this.productService.create(product);
+                //await this.productService.create(product);
             }
         }
+        */
 
         return 'DB seeded successfully!'
     }

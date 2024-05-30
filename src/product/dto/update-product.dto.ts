@@ -27,4 +27,8 @@ export class UpdateProductDto {
     @IsUUID()
     @IsOptional()
     readonly sellerId?: string;
+
+    @IsOptional()
+    @IsString()
+    readonly image?: string;
 }

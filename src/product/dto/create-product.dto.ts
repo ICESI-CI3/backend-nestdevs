@@ -21,4 +21,6 @@ export class CreateProductDto {
   @IsString()
   readonly sellerId : string;
 
+  @IsString()
+  readonly image: string;
 }

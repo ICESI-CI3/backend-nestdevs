@@ -35,6 +35,9 @@ export class Product {
     @Column('uuid',{name : 'seller_id'})
     sellerId : string;
 
+    @Column('text')
+    image: string;
+
     @ManyToOne(() => User, (user) => user.products)
     @JoinColumn({name : 'seller_id'})
     user: User;
