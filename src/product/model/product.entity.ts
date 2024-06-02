@@ -35,7 +35,9 @@ export class Product {
     @Column('uuid',{name : 'seller_id'})
     sellerId : string;
 
-    @Column('text')
+    @Column('text', {
+        nullable: true
+    })
     image: string;
 
     @ManyToOne(() => User, (user) => user.products)

@@ -72,16 +72,36 @@ export class OrderService {
   findAll() {
     return this.ordersRepository.find(
       {
-        relations: {items:true}
+        relations: {
+          user: true,
+          sellerUser : true,
+          items: true}
       }
     );
   }
 
   async findOne(id: string) {
-    return await this.ordersRepository.findOneBy({id:id});
+    return await this.ordersRepository.findOne({where: { id: id },relations:['user', 'sellerUser', 'items.product']});
   }
+
+  async findByBuyer(id: string) {
+    return await this.ordersRepository.find({where: { buyerId : id },relations:{     
+      user: true,
+      sellerUser : true,
+      items : true
+    }});
+  }
+  
+  async findBySeller(id: string) {
+    return await this.ordersRepository.find({where: { sellerId : id },relations:{     
+      user: true,
+      sellerUser : true,
+      items : true
+    }});
+  }
+
   async findOneItem(id: string) {
-    return await this.orderItemRepository.findOneBy({id:id});
+    return await this.orderItemRepository.findOne({where: { id : id }});
   }
 
   async update(req:any,id: string, updateOrderItemDto: UpdateOrderItemDto) {
@@ -121,9 +141,11 @@ export class OrderService {
 
   async removeOrder(req:any, id: string) { 
     const user = req.user as User;
-    const order : Order = await this.ordersRepository.findOneBy({id:id});
+    var order : Order = await this.ordersRepository.findOneBy({id:id});
     if (order.buyerId==user.id||user.roles.includes(UserRole.ADMIN)){    
-      const order = await this.findOne(id);
+      var order = await this.findOne(id);
+      order.items.map(item => this.removeOrderItem(req,item.id));
+      order = await this.findOne(id);
       return await this.ordersRepository.remove(order);
     }
     else{

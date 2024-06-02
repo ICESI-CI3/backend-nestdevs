@@ -36,6 +36,21 @@ export class OrderController {
     return this.orderService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.ADMIN,UserRole.SELLER,UserRole.BUYER)
+  @Get('/user/:id')
+  findAllByBuyerId(@Param('id') id: string) {
+    return this.orderService.findByBuyer(id);
+  }
+
+  
+  @UseGuards(JwtAuthGuard)
+  @Roles(UserRole.ADMIN,UserRole.SELLER)
+  @Get('/seller/:id')
+  findAllBySellerId(@Param('id') id: string) {
+    return this.orderService.findBySeller(id);
+  }
+
 
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN,UserRole.SELLER,UserRole.BUYER)

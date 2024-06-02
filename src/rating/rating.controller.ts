@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Param, Post, Query, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Query, Req, UnauthorizedException, UseGuards } from "@nestjs/common";
 import { RatingService } from "./rating.service";
 import { RateSellerDto } from "./dto/rate.seller.dto";
 import * as jwt from 'jsonwebtoken';
 import { JwtAuthGuard } from "../auth/guards/jwt-auth.guard";
 import { PaginationDto } from "../common/dtos/pagination.dto";
+import { Roles } from "src/auth/decorators/role-auth.decorator";
+import { UserRole } from "src/user/entities/user.entity";
 
 @Controller('rating')
 export class RatingController{
@@ -26,7 +28,23 @@ export class RatingController{
     getSellerRating(@Param('id') id: string){
         return this.ratingService.getSellerRating(id);
     }
+    
+    @Get('/author/:id')
+    getGivenRatings(@Param('id') id: string){
+        return this.ratingService.getGivenRatings(id);
+    }
 
+    @Get('/seller/:id')
+    getReceivedRatings(@Param('id') id: string){
+        return this.ratingService.getReceivedRatings(id);
+    }
+
+    @UseGuards(JwtAuthGuard)
+    @Roles(UserRole.ADMIN)
+    @Delete(':id')
+    deleteRating(@Param('id') id: string){
+        return this.ratingService.deleteRating(id);
+    }
 
     private getUserIdFromRequest(@Req() request: Request): string {
         const authHeader = request.headers['authorization'];

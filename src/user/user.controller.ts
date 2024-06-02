@@ -16,9 +16,7 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Roles(UserRole.ADMIN)
-  @UsePipes(ValidationPipe)
   @Post()
-  @UsePipes(ValidationPipe)
   create(@Body() createUserDto: CreateUserDto) {
     return this.userService.create(createUserDto);
   }

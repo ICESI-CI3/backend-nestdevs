@@ -4,7 +4,6 @@ import { Order } from "../../order/entities/order.entity";
 import { Product } from "../../product/model/product.entity";
 import { Rating } from "../../rating/model/rating.entity";
 import { AfterInsert, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
-import { IsEnum } from "class-validator";
 
 export enum UserRole {
     ADMIN = 'admin',

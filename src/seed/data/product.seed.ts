@@ -6,7 +6,7 @@ export const productSeed = [
         description: 'Galletas de chocolate rellenas de chocolate',
         price: 2000,
         category: ProductCategory.FOOD,
-        image : 
+        image: ""
     },{
         name : 'Coca Cola',
         description: 'Bebida refrescante',

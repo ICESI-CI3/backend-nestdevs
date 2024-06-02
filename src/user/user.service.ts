@@ -104,7 +104,14 @@ async registerBuyer(createUserDto: CreateCurrentUserDto) {
   }
 
   findOne(id: string) {
-    return this.userRepository.findOneBy({ id: id });
+    return this.userRepository.findOne({where: { id: id },relations:{
+      products : true,
+      orders: true,
+      soldOrders: true,
+      ratings: true,
+      ratingsGiven: true
+    }
+    });
   }
 
   async update(req:any, id: string, updateUserDto: UpdateUserDto) {
