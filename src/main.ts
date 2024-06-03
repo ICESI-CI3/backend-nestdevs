@@ -3,11 +3,17 @@ import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   app.enableCors({
     origin: ['https://icesi-marketplace-frontend.vercel.app', 'http://localhost:3000'],
-    credentials: true,
-    methods: ["GET", "POST"]
+    methods: ['GET', 'POST'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true
   });
-  await app.listen(5000);
+
+  await app.listen(5000, () => {
+    console.log('Server is running on http://localhost:5000');
+  });
 }
+
 bootstrap();
