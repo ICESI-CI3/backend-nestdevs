@@ -6,7 +6,7 @@ async function bootstrap() {
 
   app.enableCors({
     origin: ['https://icesi-marketplace-frontend.vercel.app', 'http://localhost:3000'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true
   });
