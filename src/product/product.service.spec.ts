@@ -40,8 +40,14 @@ describe('ProductsService', () => {
 
     it('test_findAll_returns_all_products_with_users', async () => {
         const expectedProducts: Product[] = [
-            { id: '1', name: 'Product 1', description: 'Description 1', price: 10, category: ProductCategory.FOOD, sellerId: 'user1', user: null, orderItem: [] },
-            { id: '2', name: 'Product 2', description: 'Description 2', price: 20, category: ProductCategory.BOOKS, sellerId: 'user2', user: null, orderItem: [] },
+            {
+                id: '1', name: 'Product 1', description: 'Description 1', price: 10, category: ProductCategory.FOOD, sellerId: 'user1', user: null, orderItem: [],
+                image: ''
+            },
+            {
+                id: '2', name: 'Product 2', description: 'Description 2', price: 20, category: ProductCategory.BOOKS, sellerId: 'user2', user: null, orderItem: [],
+                image: ''
+            },
         ];
         jest.spyOn(productRepository, 'find').mockResolvedValue(expectedProducts);
         const products = await service.findAll();
@@ -54,7 +60,10 @@ describe('ProductsService', () => {
     });
     it('test_create_handles_database_errors_gracefully', async () => {
         jest.spyOn(productRepository, 'save').mockRejectedValue({ code: '23505' });
-        await expect(service.create({ name: 'New Product', description: 'Description', price: 100, category: ProductCategory.FOOD, sellerId: 'user4' }))
+        await expect(service.create({
+            name: 'New Product', description: 'Description', price: 100, category: ProductCategory.FOOD, sellerId: 'user4',
+            image: ''
+        }))
             .rejects.toThrow(InternalServerErrorException);
     });
 });
