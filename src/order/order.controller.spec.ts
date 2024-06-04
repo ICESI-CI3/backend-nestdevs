@@ -161,7 +161,8 @@ describe('OrderController', () => {
           soldOrders: [],
         },
         orderItem: [],
-        category: ProductCategory.FOOD
+        category: ProductCategory.FOOD,
+        image: ''
       },
       quantity: faker.datatype.number(10)
     };

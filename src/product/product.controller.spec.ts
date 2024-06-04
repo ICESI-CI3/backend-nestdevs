@@ -44,6 +44,7 @@ describe('ProductController', () => {
         description: Faker.lorem.paragraph(),
         price: parseFloat(Faker.commerce.price()),
         sellerId: Faker.datatype.uuid(),
+        image: ''
       };
 
       const createdProduct: Product = {
@@ -70,7 +71,8 @@ describe('ProductController', () => {
           price: parseFloat(Faker.commerce.price()),
           sellerId: Faker.datatype.uuid(),
           user: new User(),
-          orderItem: []
+          orderItem: [],
+          image: ''
         },
         {
           id: Faker.datatype.uuid(),
@@ -80,7 +82,8 @@ describe('ProductController', () => {
           price: parseFloat(Faker.commerce.price()),
           sellerId: Faker.datatype.uuid(),
           user: new User(),
-          orderItem: []
+          orderItem: [],
+          image: ''
         }
       ];
       jest.spyOn(productService, 'findAll').mockResolvedValue(products);
@@ -100,9 +103,10 @@ describe('ProductController', () => {
         price: parseFloat(Faker.commerce.price()),
         sellerId: Faker.datatype.uuid(),
         user: new User(),
-        orderItem: []
+        orderItem: [],
+        image: ''
       };
-      jest.spyOn(productService, 'findOneById').mockReturnValue(product);
+      jest.spyOn(productService, 'findOneById').mockResolvedValue(product);
 
       expect(await controller.findOne(productId)).toBe(product);
     });
@@ -119,13 +123,14 @@ describe('ProductController', () => {
       };
       const updatedProduct: Product = {
         id: Faker.datatype.uuid(),
-        name: Faker.commerce.productName(), 
+        name: Faker.commerce.productName(),
         category: Faker.commerce.department(),
         description: Faker.lorem.paragraph(),
         price: parseFloat(Faker.commerce.price()),
         sellerId: Faker.datatype.uuid(),
         user: new User(),
-        orderItem: []
+        orderItem: [],
+        image: ''
       };
       
       
@@ -138,7 +143,7 @@ describe('ProductController', () => {
   describe('delete', () => {
     it('should delete a product', async () => {
       const productId = Faker.datatype.uuid();
-      const deletedProduct: Product = { 
+      const deletedProduct: Product = {
         id: productId,
         name: '',
         category: Faker.commerce.department(),
@@ -146,7 +151,8 @@ describe('ProductController', () => {
         price: 0,
         sellerId: '',
         user: new User(),
-        orderItem: []
+        orderItem: [],
+        image: ''
       };
   
       jest.spyOn(productService, 'delete').mockResolvedValue(deletedProduct); 

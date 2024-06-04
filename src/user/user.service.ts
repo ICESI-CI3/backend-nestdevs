@@ -44,7 +44,7 @@ async registerSeller(createUserDto: CreateCurrentUserDto) {
       const {password,...userData} = createUserDto;
       const user = this.userRepository.create({
         ...userData,
-        roles : [UserRole.SELLER],
+        roles : [UserRole.SELLER,UserRole.BUYER],
         password : bcrypt.hashSync(password, 10),
         id : uuid()
       });
